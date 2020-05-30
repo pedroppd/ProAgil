@@ -22,10 +22,20 @@ namespace ProAgil.WebAPI
         }
 
         public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+        {
+            options.AddPolicy(name: MyAllowSpecificOrigins,
+                              builder =>
+                              {
+                                  builder.WithOrigins("http://localhost:4200", "http://localhost:5000/value").AllowAnyHeader().AllowAnyMethod();;
+                              });
+        });
             services.AddControllers();
             services.AddDbContext<DataContext>(db => db.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
         }
@@ -37,10 +47,11 @@ namespace ProAgil.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            //app.UseHttpsRedirection();
-
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
+            //app.UseHttpsRedirection();
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 
