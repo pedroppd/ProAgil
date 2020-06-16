@@ -1,10 +1,74 @@
-<div>
-  <div *ngFor = 'let evento of eventos'>
-    {{evento.eventoId}}
-    {{evento.tema}}
-    {{evento.local}}
-    {{evento.dataEvento}}
-    {{evento.lote}}
-    {{evento.qtdPessoa}}<br>
+
+<div action="" class="form form-inline">
+  <div class="form-group mb-2">
+    <input type="text" class="form-control mr-2" [(ngModel)]="filterList" placeholder="Buscar eventos...">
+    <button class="btn btn-outline-success">Buscar</button>
   </div>
 </div>
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>
+        <button class="btn btn-outline-primary" (click)="AlterImage()">
+          <i class="{{ShowImage ? 'fa fa-eye-slash' : 'fa fa-eye'}}"></i>
+        </button>
+      </th>
+      <th>Identificador</th>
+      <th>Tema</th>
+      <th>Local</th>
+      <th>Lote</th>
+      <th>Qtd Pessoas</th>
+      <th>Data</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody *ngIf = "eventosList != null">
+    <tr *ngFor="let evento of EventFilters">
+      <th>
+        <img *ngIf = "ShowImage" src="https://localhost:44303/img/{{evento.imagemURL}}" [style.width.px] = "50" [style.margin.px] = "2"/>
+      </th>
+      <th>{{evento.id}}</th>
+      <th>{{evento.tema}}</th>
+      <th>{{evento.local}}</th>
+      <th *ngIf="evento.lotes == null">
+        Não informado.
+      </th>
+      <th *ngIf="evento.lotes != null">
+        {{evento.lotes[0].nome}}
+      </th>
+      <th>{{evento.qtdPessoas}}</th>
+      <th>{{evento.dataEvento | DateTime}}</th>
+      <th>
+        <div class="btn-group">
+          <button class="btn btn-sm btn-outline-danger" tooltip="Editar" (click)="OpenModal(template)">
+            <i class="fa fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-primary" tooltip="Excluir" (click)="OpenModal(template)">
+            <i class="fa fa-eraser"></i>
+          </button>
+        </div>
+      </th>
+    </tr>
+  </tbody>
+</table>
+
+<tfoot *ngIf = "eventosList == null">
+  <h3>Nenhum evento encontrado :(</h3>
+</tfoot>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modal</h4>
+    <button type="button" class="close pull-right" 
+    aria-label="Close" (click)="modalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  This is a modal.
+</div>
+</ng-template>
+
+
+

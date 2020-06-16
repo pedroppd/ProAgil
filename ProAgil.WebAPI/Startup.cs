@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using ProAgil.Repository;
 
 namespace ProAgil.WebAPI
 {
@@ -33,11 +33,12 @@ namespace ProAgil.WebAPI
             options.AddPolicy(name: MyAllowSpecificOrigins,
                               builder =>
                               {
-                                  builder.WithOrigins("http://localhost:4200", "http://localhost:5000/value").AllowAnyHeader().AllowAnyMethod();;
+                                  builder.WithOrigins("http://localhost:4200", "http://localhost:5000/value", "http://localhost:44303/value").AllowAnyHeader().AllowAnyMethod();;
                               });
         });
+            services.AddScoped<IProAgilRepository, ProAgilRepository>();
             services.AddControllers();
-            services.AddDbContext<DataContext>(db => db.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ProAgilContext>(db => db.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +55,7 @@ namespace ProAgil.WebAPI
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
-
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
