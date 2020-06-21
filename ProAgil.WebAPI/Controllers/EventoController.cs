@@ -85,7 +85,7 @@ namespace ProAgil.WebAPI.Controllers
         }
 
         [HttpPut]
-        [Route("updateEvento")]
+        [Route("updateEvento/{id}")]
         public async Task<IActionResult> Update(int id,  Evento evento)
         {
             try
@@ -113,7 +113,7 @@ namespace ProAgil.WebAPI.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteEvento/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             try
